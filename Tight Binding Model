@@ -1,0 +1,129 @@
+Contains python codes for obtaining density of states for Chain of Hydrogen atoms in a line or a ring.
+
+Main Assumptions: The electron feels an average effect of the other electrons in the system effectively reducing the problem into a 1-electron problem. 
+The eigen-vectors for such a Hamiltonian is assumed to lie in the span of the ground state solutions of the single well potential. 
+The hopping probability is non-zero only for hopping between adjacent atoms.
+
+
+1.EIGENVALUES PLOT
+import numpy as np
+import matplotlib.pyplot as plt
+
+Number of atoms
+n = int(input("enter no of atoms"))
+m=int(input("0-linear , 1-ring"))
+#m=0 - linear chain , m=1 - ring
+
+Parameters
+E0 = -13.6
+beta = -1.0
+
+Initialize Hamiltonian
+H = np.zeros((n, n))
+
+Diagonal terms
+np.fill_diagonal(H, E0)
+
+Nearest-neighbor hopping
+for i in range(n - 1):
+H[i, i + 1] = beta
+H[i + 1, i] = beta
+
+if m==0:
+pass
+else:
+H[0, n - 1] = beta
+H[n - 1, 0] = beta
+
+eigenvalues = np.linalg.eigvalsh(H)
+
+Plot
+plt.figure()
+plt.plot(range(1, n + 1), eigenvalues, 'o')
+plt.xlabel("Eigenvalue index")
+plt.ylabel("Energy eigenvalues")
+plt.title("Energy Spectrum: Hydrogen Chain")
+plt.grid(True)
+plt.show()`
+
+2.DENSITY OF STATES FOR LINEAR CHAIN OF ATOMS
+import numpy as np
+import matplotlib.pyplot as plt
+
+Number of atoms
+n = 1000
+
+Parameters
+E0 = -13.6
+beta = -1.0
+
+Build Hamiltonian
+H = np.zeros((n, n))
+np.fill_diagonal(H, E0)
+
+for i in range(n - 1):
+H[i, i + 1] = beta
+H[i + 1, i] = beta
+
+Eigenvalues
+eigenvalues = np.linalg.eigvalsh(H)
+
+Histogram-based DOS
+bins = 50
+
+increase for smoother DOS
+dos, energy_bins = np.histogram(eigenvalues, bins=bins, density=True)
+
+Bin centers
+energy_centers = 0.5 * (energy_bins[:-1] + energy_bins[1:])
+
+Plot DOS
+plt.figure()
+plt.plot(energy_centers, dos)
+plt.xlabel("Energy (eV)")
+plt.ylabel("Density of states")
+plt.title("Density of States: Linear Hydrogen Chain")
+plt.grid(True)
+plt.show()
+
+3.Ring
+import numpy as np
+import matplotlib.pyplot as plt
+
+Number of atoms
+n = 1000
+
+Parameters
+E0 = -13.6
+beta = -1.0
+
+Build Hamiltonian
+H = np.zeros((n, n))
+np.fill_diagonal(H, E0)
+
+for i in range(n - 1):
+H[i, i + 1] = beta
+H[i + 1, i] = beta
+H[0, n - 1] = beta
+H[n - 1, 0] = beta
+
+Eigenvalues
+eigenvalues = np.linalg.eigvalsh(H)
+
+Histogram-based DOS
+bins = 50
+
+increase for smoother DOS
+dos, energy_bins = np.histogram(eigenvalues, bins=bins, density=True)
+
+Bin centers
+energy_centers = 0.5 * (energy_bins[:-1] + energy_bins[1:])
+
+Plot DOS
+plt.figure()
+plt.plot(energy_centers, dos)
+plt.xlabel("Energy (eV)")
+plt.ylabel("Density of states")
+plt.title("Density of States: Linear Hydrogen Chain")
+plt.grid(True)
+plt.show()
